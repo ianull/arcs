@@ -84,8 +84,8 @@ class StoreWriteBackTest {
         databaseFactory = FakeDatabaseManager()
         DatabaseDriverProvider.configure(databaseFactory) { schema }
         random = Random(System.currentTimeMillis())
-        executor = Executors.newCachedThreadPool {
-            Thread(it).apply { name = "WriteBack #$id" }
+        executor = Executors.newSingleThreadExecutor {
+            Thread(it).apply { name = "WriteBack" }
         }
         writeBackScope = CoroutineScope(
             executor.asCoroutineDispatcher() + SupervisorJob()

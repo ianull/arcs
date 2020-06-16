@@ -62,8 +62,10 @@ open class StorageService : ResurrectorService() {
     private val coroutineContext = Dispatchers.IO + CoroutineName("StorageService")
     private val scope = CoroutineScope(coroutineContext)
     private val writeBackScope = CoroutineScope(
-        Executors.newCachedThreadPool {
-            Thread(it).apply { name = "WriteBack #$id" }
+        // TODO: change to multiple-threading executor and make WriteBack
+        // per ReferenceModeStore for better performance sake.
+        Executors.newSingleThreadExecutor {
+            Thread(it).apply { name = "WriteBack" }
         }.asCoroutineDispatcher() + SupervisorJob()
     )
     private val stores = ConcurrentHashMap<StorageKey, Store<*, *, *>>()
